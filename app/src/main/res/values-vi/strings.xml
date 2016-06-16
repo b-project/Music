@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+
+    <string name="app_name">Nhạc</string>
+    <string name="action_settings">Cài đặt</string>
+
+    <string name="accessibility_play">Chơi</string>
+    <string name="accessibility_pause">Dừng </string>
+    <string name="accessibility_next">Qua bài</string>
+    <string name="accessibility_prev">Quay lại</string>
+    <string name="accessibility_shuffle">Trộn</string>
+    <string name="accessibility_shuffle_all">Trộng tất cả</string>
+    <string name="accessibility_repeat">Lặp lại</string>
+    <string name="accessibility_repeat_all">Lặp lại tắt cả</string>
+    <string name="accessibility_repeat_one">Lặp một</string>
+    <string name="accessibility_queue">Open queue</string>
+    <string name="accessibility_browse">Tìm nhạc</string>
+
+    <string name="menu_sort_by">Xem bởi</string>
+    <string name="sort_order_entry_az">A-Z</string>
+    <string name="sort_order_entry_za">Z-A</string>
+    <string name="sort_order_entry_artist">Artist</string>
+    <string name="sort_order_entry_album">Album</string>
+    <string name="sort_order_entry_year">Năm</string>
+    <string name="sort_order_entry_track_number">Track Number</string>
+    <string name="sort_order_entry_duration">Duration</string>
+    <string name="sort_order_entry_date_added">Date added</string>
+    <string name="sort_order_entry_track_list">Danh sách</string>
+    <string name="sort_order_entry_number_of_songs">Số của bài hát</string>
+    <string name="sort_order_entry_number_of_albums">Số của Album</string>
+    <string name="sort_order_entry_filename">Filename</string>
+
+    <string name="error_playing_track">Lỗik</string>
+
+    <string name="playlist_last_added">Đã thêm</string>
+    <string name="playlist_recently_played">Vừa mới chạy</string>
+    <string name="playlist_top_tracks">Nhạc của tôi</string>
+
+    <string name="combine_two_strings" translatable="false">%1$s | %2$s</string>
+
+    <string name="menu_show_as">Xem bởi</string>
+    <string name="menu_show_as_entry_list">List</string>
+    <string name="menu_show_as_entry_grid">Grid</string>
+
+    <string name="light">Light</string>
+    <string name="dark">Dark</string>
+    <string name="black">Black</string>
+
+    <string name="last_opened">Last Opened</string>
+
+    <string name="songs">Nhạc</string>
+    <string name="albums">Albums</string>
+    <string name="artists">Ca sĩ</string>
+    <string name="library">Thư viện</string>
+    <string name="playlists">Danh sách</string>
+    <string name="playing_queue">Playing Queue</string>
+    <string name="now_playing">Đang chạy</string>
+    <string name="settings">Cài đặt</string>
+    <string name="about">Thông tin</string>
+    <string name="search">Tìm kiếm</string>
+    <string name="action_shuffle_all">Shuffle All</string>
+    <string name="action_equalizer">Bộ Chỉnh Âm</string>
+    <string name="search_library">Tìm thư viện</string>
+    <string name="count_song"><xliff:g id="count">%d</xliff:g> song</string>
+    <string name="count_songs"><xliff:g id="count">%d</xliff:g> songs</string>
+    <string name="count_album"><xliff:g id="count">%d</xliff:g> album</string>
+    <string name="count_albums"><xliff:g id="count">%d</xliff:g> albums</string>
+    <string name="count_artist"><xliff:g id="count">%d</xliff:g> artist</string>
+    <string name="count_artists"><xliff:g id="count">%d</xliff:g> artists</string>
+    <string name="select_theme">Chọn chủ đề</string>
+    <string name="choose_theme_throughout">Chọn chủ đề cho máy nghe nhạc.</string>
+    <string name="choose_start_page">Chọn trang khi bắt đầu mở ứng dụng.</string>
+    <string name="start_page">Bắt đầu trang</string>
+    <string name="artist_in_grid">Artists in Grid</string>
+    <string name="toggle_artists_grid">Toggle for displaying artists in a 2x2 grid.</string>
+    <string name="toggle_system_animations">.</string>
+    <string name="system_animations">Hiệu ứng hệ thống</string>
+    <string name="toggle_animations">Chuyển đổi hình ảnh động chuyển đổi trong suốt ứng dụng.</string>
+    <string name="animations">Hiệu ứng</string>
+    <string name="now_playing_selector">Chọn  phong cách chơi nhạc.</string>
+    <string name="personalisation">Riêng</string>
+    <string name="other">Khác</string>
+    <string name="music_about_bluros">Music Powered by BlurOS.</string>
+    <string name="summary_pause_detach">Tự đông tắt nhạc khi rút tai nghe</string>
+    <string name="pause_detach">Pause on Detach</string>
+    <string name="currently_selected">Currently Selected</string>
+    <string name="bluros_pow">Powered By BlurOS</string>
+    <string name="settings_shake_to_play">Lắc để chơi nhạc</string>
+    <string name="settings_shake_to_play_summary">Lắc một cái để chuyển bài hoặc lắc liên tục để tua bài hát</string>
+    
+</resources>
