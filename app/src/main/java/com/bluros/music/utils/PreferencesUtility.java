@@ -105,7 +105,7 @@ public final class PreferencesUtility {
     }
 
     public String getTheme() {
-        return mPreferences.getString(THEME_PREFERNCE, "light");
+        return mPreferences.getString(THEME_PREFERNCE, "dark");
     }
 
     public int getStartPageIndex() {

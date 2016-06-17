@@ -9,18 +9,13 @@ android {
         minSdkVersion 16
         targetSdkVersion 23
         versionCode 6
-        versionName "0.122b"
+        versionName "1.1"
         renderscriptTargetApi 23
         renderscriptSupportModeEnabled true
     }
     buildTypes {
         release {
             minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-        debug{
-            versionNameSuffix "-debug"
-            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }

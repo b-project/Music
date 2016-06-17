@@ -25,13 +25,13 @@
             android:title="@string/system_animations"/>
 
         <SwitchPreference
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:key="toggle_artist_grid"
             android:summary="@string/toggle_artists_grid"
             android:title="@string/artist_in_grid"/>
 
         <ListPreference
-            android:defaultValue="light"
+            android:defaultValue="dark"
             android:entries="@array/pref_theme_entries"
             android:entryValues="@array/pref_theme_values"
             android:key="theme_preference"
@@ -51,7 +51,7 @@
             android:title="@string/start_page" />
             
         <CheckBoxPreference
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:key="shake_to_play"
             android:title="@string/settings_shake_to_play"
             android:summary="@string/settings_shake_to_play_summary"/>

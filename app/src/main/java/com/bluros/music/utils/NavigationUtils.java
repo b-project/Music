@@ -162,7 +162,7 @@ public class NavigationUtils {
             case Constants.TIMBER4:
                 return new Music4();
             default:
-                return new Music1();
+                return new Music2();
         }
 
     }

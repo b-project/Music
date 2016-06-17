@@ -91,7 +91,7 @@ public class SubStyleSelectorFragment extends Fragment {
 
     public void setCurrentStyle() {
         preferences = getActivity().getSharedPreferences(Constants.FRAGMENT_ID, Context.MODE_PRIVATE);
-        String fragmentID = preferences.getString(Constants.NOWPLAYING_FRAGMENT_ID, Constants.TIMBER3);
+        String fragmentID = preferences.getString(Constants.NOWPLAYING_FRAGMENT_ID, Constants.TIMBER2);
 
         ((StyleSelectorFragment) getParentFragment()).scrollToCurrentStyle(getIntForCurrentNowplaying(fragmentID));
 
@@ -127,7 +127,7 @@ public class SubStyleSelectorFragment extends Fragment {
             case 3:
                 return Constants.TIMBER4;
             default:
-                return Constants.TIMBER3;
+                return Constants.TIMBER2;
         }
     }
 
@@ -142,7 +142,7 @@ public class SubStyleSelectorFragment extends Fragment {
             case Constants.TIMBER4:
                 return 3;
             default:
-                return 2;
+                return 1;
         }
 
     }

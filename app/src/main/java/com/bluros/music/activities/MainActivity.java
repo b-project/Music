@@ -92,11 +92,7 @@ public class MainActivity extends BaseActivity {
         isLightTheme = PreferencesUtility.getInstance(this).getTheme().equals("light");
         isDarkTheme = PreferencesUtility.getInstance(this).getTheme().equals("dark");
 
-        if (action.equals(Constants.NAVIGATE_ALBUM) || action.equals(Constants.NAVIGATE_ARTIST) || action.equals(Constants.NAVIGATE_NOWPLAYING)) {
-            isNavigatingMain = false;
-        } else {
-            isNavigatingMain = true;
-        }
+         isNavigatingMain = true;
 
         if (!isNavigatingMain) {
             if (isLightTheme)
@@ -148,8 +144,6 @@ public class MainActivity extends BaseActivity {
         } else {
             loadEverything();
         }
-
-
     }
 
     private void loadEverything() {
@@ -186,14 +180,8 @@ public class MainActivity extends BaseActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
-        if (action.equals(Constants.NAVIGATE_NOWPLAYING)) {
-            menu.findItem(R.id.action_search).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-        } else {
             menu.findItem(R.id.action_search).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        }
-        if (!MusicUtils.hasEffectsPanel(MainActivity.this)) {
-            menu.removeItem(R.id.action_equalizer);
-        }
+
         return true;
     }
 
@@ -201,9 +189,7 @@ public class MainActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                if (!(action.equals(Constants.NAVIGATE_ALBUM) || action.equals(Constants.NAVIGATE_ARTIST) || action.equals(Constants.NAVIGATE_NOWPLAYING)))
-                    mDrawerLayout.openDrawer(GravityCompat.START);
-                else super.onBackPressed();
+                mDrawerLayout.openDrawer(GravityCompat.START);
                 return true;
             case R.id.action_settings:
                 NavigationUtils.navigateToSettings(this);
@@ -417,7 +403,7 @@ public class MainActivity extends BaseActivity {
         public void run() {
             navigationView.getMenu().findItem(R.id.nav_nowplaying).setCheckable(false);
             SharedPreferences prefs = getSharedPreferences(Constants.FRAGMENT_ID, Context.MODE_PRIVATE);
-            String fragmentID = prefs.getString(Constants.NOWPLAYING_FRAGMENT_ID, Constants.TIMBER3);
+            String fragmentID = prefs.getString(Constants.NOWPLAYING_FRAGMENT_ID, Constants.TIMBER2);
 
             Fragment fragment = NavigationUtils.getFragmentForNowplayingID(fragmentID);
             FragmentManager fragmentManager = getSupportFragmentManager();

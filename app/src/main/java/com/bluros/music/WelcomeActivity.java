@@ -3,6 +3,7 @@ package com.bluros.music;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.content.ComponentName;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
@@ -17,8 +18,8 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.bluros.music.activities.MainActivity;
-import com.bluros.music.MusicApp;
 
 public class WelcomeActivity extends AppCompatActivity {
 
@@ -120,8 +121,16 @@ public class WelcomeActivity extends AppCompatActivity {
 
     private void launchHomeScreen() {
         prefManager.setFirstTimeLaunch(false);
-        startActivity(new Intent(WelcomeActivity.this, MainActivity.class));
+
+        Intent open = new Intent().setComponent(new ComponentName(
+                            "bluros.music", "com.bluros.music.activities.MainActivity"));
+
+        // Intent open  = new Intent(WelcomeActivity.this, MainActivity.class);
+        startActivity(open);
         finish();
+
+        //startActivity(new Intent(WelcomeActivity.this, MainActivity.class));
+        //
     }
 
     //	viewpager change listener
