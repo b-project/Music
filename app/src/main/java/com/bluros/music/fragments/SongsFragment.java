@@ -14,18 +14,23 @@
 
 package com.bluros.music.fragments;
 
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-
+import android.util.Log;
 import com.bluros.music.R;
 import com.bluros.music.activities.BaseActivity;
 import com.bluros.music.adapters.SongsListAdapter;
@@ -36,11 +41,13 @@ import com.bluros.music.utils.PreferencesUtility;
 import com.bluros.music.utils.SortOrder;
 import com.bluros.music.widgets.DividerItemDecoration;
 import com.bluros.music.widgets.FastScroller;
+import com.bluros.music.utils.Load;
 
 import java.util.List;
 
 public class SongsFragment extends Fragment implements MusicStateListener {
 
+    private static final String TAG = "SongsFragment";
     private SongsListAdapter mAdapter;
     private RecyclerView recyclerView;
     private PreferencesUtility mPreferences;
@@ -48,6 +55,8 @@ public class SongsFragment extends Fragment implements MusicStateListener {
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getLoaderManager().initLoader(0, null,
+                mSongLoaderListener);
         mPreferences = PreferencesUtility.getInstance(getActivity());
     }
 
@@ -61,7 +70,7 @@ public class SongsFragment extends Fragment implements MusicStateListener {
         FastScroller fastScroller = (FastScroller) rootView.findViewById(R.id.fastscroller);
         fastScroller.setRecyclerView(recyclerView);
 
-        new loadSongs().execute("");
+       // new loadSongs().execute("");
         ((BaseActivity) getActivity()).setMusicStateListenerListener(this);
 
         return rootView;
@@ -79,28 +88,6 @@ public class SongsFragment extends Fragment implements MusicStateListener {
         if (mAdapter != null)
             mAdapter.notifyDataSetChanged();
     }
-
-    private class loadSongs extends AsyncTask<String, Void, String> {
-
-        @Override
-        protected String doInBackground(String... params) {
-            mAdapter = new SongsListAdapter(getActivity(), SongLoader.getAllSongs(getActivity()), false);
-            return "Executed";
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            recyclerView.setAdapter(mAdapter);
-            if (getActivity() != null)
-                recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
-
-        }
-
-        @Override
-        protected void onPreExecute() {
-        }
-    }
-
 
     private void reloadAdapter() {
         new AsyncTask<Void, Void, Void>() {
@@ -159,5 +146,56 @@ public class SongsFragment extends Fragment implements MusicStateListener {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private final LoaderManager.LoaderCallbacks<Cursor> mSongLoaderListener =
+            new LoaderManager.LoaderCallbacks<Cursor>() {
+
+                @Override
+                public CursorLoader onCreateLoader(int id, Bundle args) {
+                    switch (id) {
+                        case 0 :
+                            return Load.createSongLoader(getActivity());
+
+                        default:
+                            throw new IllegalStateException(
+                                    "Unrecognized DisplayType " + id);
+                    }
+                }
+
+                @Override
+                public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+                    if (data == null || data.isClosed()) {
+                        Log.e(TAG, "Failed to load contacts");
+                        return;
+                    }
+                    new loadSongs().execute(data);
+                }
+
+                @Override
+                public void onLoaderReset(Loader<Cursor> loader) {}
+            };
+
+
+    private class loadSongs extends AsyncTask<Cursor, Void, SongsListAdapter> {
+
+        @Override
+        protected SongsListAdapter doInBackground(Cursor... params) {
+            if (getActivity() != null)
+                mAdapter = new SongsListAdapter((AppCompatActivity) getActivity(), SongLoader.getSongsForCursor(params[0]), false);
+            return mAdapter;
+        }
+
+        @Override
+        protected void onPostExecute(SongsListAdapter result) {
+            recyclerView.setAdapter(result);
+            if (getActivity() != null)
+                recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
+
+        }
+
+        @Override
+        protected void onPreExecute() {
+        }
     }
 }

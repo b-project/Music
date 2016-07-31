@@ -5,7 +5,7 @@
     android:background="?attr/selectableItemBackground"
     android:orientation="vertical"
     android:paddingBottom="6dp"
-    android:paddingLeft="5dp"
+    android:paddingLeft="8dp"
     android:paddingTop="6dp">
 
     <RelativeLayout
@@ -24,10 +24,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
-            android:layout_toLeftOf="@+id/currentlyPlayingIndicator"
+            android:layout_toLeftOf="@+id/visualizer"
             android:layout_toRightOf="@+id/albumArt"
             android:orientation="vertical"
-            android:paddingLeft="10dp"
+            android:paddingLeft="12dp"
             android:paddingTop="5dp">
 
 
@@ -53,29 +53,28 @@
 
         </LinearLayout>
 
-        <net.steamcrafted.materialiconlib.MaterialIconView
-            android:id="@+id/currentlyPlayingIndicator"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="30dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:scaleType="center"
-            android:visibility="invisible"
-            app:materialIconColor="?attr/accentColor"
-            app:materialIconSize="35dp" />
+        <com.bluros.music.widgets.MusicVisualizer
+            android:id="@+id/visualizer"
+            android:layout_width="30dp"
+            android:layout_height="40dp"
+            android:layout_centerVertical="true"
+            android:layout_marginBottom="10dp"
+            android:layout_marginRight="15dp"
+            android:layout_toLeftOf="@+id/popup_menu"
+            android:visibility="gone" />
+
 
         <ImageView
             android:id="@+id/popup_menu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="8dp"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="12dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:foregroundTint="#434343"
             android:padding="5dp"
-            android:src="@drawable/abc_ic_menu_moreoverflow_mtrl_alpha"
-            android:theme="@style/Theme.AppCompat.Light" />
+            android:src="@drawable/abc_ic_menu_moreoverflow_mtrl_alpha" />
 
 
     </RelativeLayout>

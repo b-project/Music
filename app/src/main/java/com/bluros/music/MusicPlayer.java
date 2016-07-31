@@ -17,7 +17,9 @@ package com.bluros.music;
 
 import android.app.Activity;
 import android.content.ComponentName;
+import android.content.ContentResolver;
 import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
@@ -40,12 +42,13 @@ import java.util.WeakHashMap;
 
 public class MusicPlayer {
 
-    public static IMusicService mService = null;
     private static final WeakHashMap<Context, ServiceBinder> mConnectionMap;
 
     private static boolean sShakeToPlayEnabled;
 
     private static final long[] sEmptyList;
+    public static IMusicService mService = null;
+    private static ContentValues[] mContentValuesCache = null;
 
     static {
         mConnectionMap = new WeakHashMap<Context, ServiceBinder>();
@@ -87,47 +90,9 @@ public class MusicPlayer {
         }
     }
 
-    public static final class ServiceBinder implements ServiceConnection {
-        private final ServiceConnection mCallback;
-        private final Context mContext;
-
-
-        public ServiceBinder(final ServiceConnection callback, final Context context) {
-            mCallback = callback;
-            mContext = context;
-        }
-
-        @Override
-        public void onServiceConnected(final ComponentName className, final IBinder service) {
-            mService = IMusicService.Stub.asInterface(service);
-            if (mCallback != null) {
-                mCallback.onServiceConnected(className, service);
-            }
-            initPlaybackServiceWithSettings(mContext);
-            MusicPlayer.setShakeToPlayEnabled(sShakeToPlayEnabled);
-        }
-
-        @Override
-        public void onServiceDisconnected(final ComponentName className) {
-            if (mCallback != null) {
-                mCallback.onServiceDisconnected(className);
-            }
-            mService = null;
-        }
-    }
-
-    public static final class ServiceToken {
-        public ContextWrapper mWrappedContext;
-
-        public ServiceToken(final ContextWrapper context) {
-            mWrappedContext = context;
-        }
-    }
-
     public static final boolean isPlaybackServiceConnected() {
         return mService != null;
     }
-
 
     public static void next() {
         try {
@@ -138,11 +103,9 @@ public class MusicPlayer {
         }
     }
 
-
     public static void initPlaybackServiceWithSettings(final Context context) {
         setShowAlbumArtOnLockscreen(true);
     }
-
 
     public static void setShowAlbumArtOnLockscreen(final boolean enabled) {
         try {
@@ -152,7 +115,6 @@ public class MusicPlayer {
         } catch (final RemoteException ignored) {
         }
     }
-
 
     public static void asyncNext(final Context context) {
         final Intent previous = new Intent(context, MusicService.class);
@@ -169,7 +131,6 @@ public class MusicPlayer {
         }
         context.startService(previous);
     }
-
 
     public static void playOrPause() {
         try {
@@ -206,7 +167,6 @@ public class MusicPlayer {
         }
     }
 
-
     public static void cycleShuffle() {
         try {
             if (mService != null) {
@@ -231,7 +191,6 @@ public class MusicPlayer {
         }
     }
 
-
     public static final boolean isPlaying() {
         if (mService != null) {
             try {
@@ -241,7 +200,6 @@ public class MusicPlayer {
         }
         return false;
     }
-
 
     public static final int getShuffleMode() {
         if (mService != null) {
@@ -253,6 +211,15 @@ public class MusicPlayer {
         return 0;
     }
 
+    public static void setShuffleMode(int mode) {
+        try {
+            if (mService != null) {
+                mService.setShuffleMode(mode);
+            }
+        } catch (RemoteException ignored) {
+
+        }
+    }
 
     public static final int getRepeatMode() {
         if (mService != null) {
@@ -274,7 +241,6 @@ public class MusicPlayer {
         return null;
     }
 
-
     public static final String getArtistName() {
         if (mService != null) {
             try {
@@ -284,7 +250,6 @@ public class MusicPlayer {
         }
         return null;
     }
-
 
     public static final String getAlbumName() {
         if (mService != null) {
@@ -296,7 +261,6 @@ public class MusicPlayer {
         return null;
     }
 
-
     public static final long getCurrentAlbumId() {
         if (mService != null) {
             try {
@@ -306,7 +270,6 @@ public class MusicPlayer {
         }
         return -1;
     }
-
 
     public static final long getCurrentAudioId() {
         if (mService != null) {
@@ -318,7 +281,6 @@ public class MusicPlayer {
         return -1;
     }
 
-
     public static final MusicPlaybackTrack getCurrentTrack() {
         if (mService != null) {
             try {
@@ -328,7 +290,6 @@ public class MusicPlayer {
         }
         return null;
     }
-
 
     public static final MusicPlaybackTrack getTrack(int index) {
         if (mService != null) {
@@ -340,7 +301,6 @@ public class MusicPlayer {
         return null;
     }
 
-
     public static final long getNextAudioId() {
         if (mService != null) {
             try {
@@ -350,7 +310,6 @@ public class MusicPlayer {
         }
         return -1;
     }
-
 
     public static final long getPreviousAudioId() {
         if (mService != null) {
@@ -362,7 +321,6 @@ public class MusicPlayer {
         return -1;
     }
 
-
     public static final long getCurrentArtistId() {
         if (mService != null) {
             try {
@@ -373,7 +331,6 @@ public class MusicPlayer {
         return -1;
     }
 
-
     public static final int getAudioSessionId() {
         if (mService != null) {
             try {
@@ -383,7 +340,6 @@ public class MusicPlayer {
         }
         return -1;
     }
-
 
     public static final long[] getQueue() {
         try {
@@ -418,7 +374,6 @@ public class MusicPlayer {
         return 0;
     }
 
-
     public static final int getQueuePosition() {
         try {
             if (mService != null) {
@@ -429,6 +384,14 @@ public class MusicPlayer {
         return 0;
     }
 
+    public static void setQueuePosition(final int position) {
+        if (mService != null) {
+            try {
+                mService.setQueuePosition(position);
+            } catch (final RemoteException ignored) {
+            }
+        }
+    }
 
     public static final int getQueueHistorySize() {
         if (mService != null) {
@@ -440,7 +403,6 @@ public class MusicPlayer {
         return 0;
     }
 
-
     public static final int getQueueHistoryPosition(int position) {
         if (mService != null) {
             try {
@@ -451,7 +413,6 @@ public class MusicPlayer {
         return -1;
     }
 
-
     public static final int[] getQueueHistoryList() {
         if (mService != null) {
             try {
@@ -461,7 +422,6 @@ public class MusicPlayer {
         }
         return null;
     }
-
 
     public static final int removeTrack(final long id) {
         try {
@@ -492,7 +452,6 @@ public class MusicPlayer {
         } catch (final RemoteException ignored) {
         }
     }
-
 
     public static void playArtist(final Context context, final long artistId, int position, boolean shuffle) {
         final long[] artistList = getSongListForArtist(context, artistId);
@@ -538,12 +497,14 @@ public class MusicPlayer {
         }
     }
 
-    public static void playNext(final long[] list, final long sourceId, final IdType sourceType) {
+    public static void playNext(Context context, final long[] list, final long sourceId, final IdType sourceType) {
         if (mService == null) {
             return;
         }
         try {
             mService.enqueue(list, MusicService.NEXT, sourceId, sourceType.mId);
+            final String message = makeLabel(context, R.plurals.NNNtrackstoqueue, list.length);
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
         } catch (final RemoteException ignored) {
         }
     }
@@ -686,7 +647,6 @@ public class MusicPlayer {
         return 0;
     }
 
-
     public static final long duration() {
         if (mService != null) {
             try {
@@ -697,16 +657,6 @@ public class MusicPlayer {
             }
         }
         return 0;
-    }
-
-
-    public static void setQueuePosition(final int position) {
-        if (mService != null) {
-            try {
-                mService.setQueuePosition(position);
-            } catch (final RemoteException ignored) {
-            }
-        }
     }
 
 
@@ -730,21 +680,168 @@ public class MusicPlayer {
         }
     }
 
-            /**
-          * Set shake to play status
-          */
+    public static final String makeLabel(final Context context, final int pluralInt,
+                                         final int number) {
+        return context.getResources().getQuantityString(pluralInt, number, number);
+    }
 
-            public static void setShakeToPlayEnabled(boolean enabled) {
+    public static void addToPlaylist(final Context context, final long[] ids, final long playlistid) {
+        final int size = ids.length;
+        final ContentResolver resolver = context.getContentResolver();
+        final String[] projection = new String[]{
+                "max(" + "play_order" + ")",
+        };
+        final Uri uri = MediaStore.Audio.Playlists.Members.getContentUri("external", playlistid);
+        Cursor cursor = null;
+        int base = 0;
+
+        try {
+            cursor = resolver.query(uri, projection, null, null, null);
+
+            if (cursor != null && cursor.moveToFirst()) {
+                base = cursor.getInt(0) + 1;
+            }
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+                cursor = null;
+            }
+        }
+
+        int numinserted = 0;
+        for (int offSet = 0; offSet < size; offSet += 1000) {
+            makeInsertItems(ids, offSet, 1000, base);
+            numinserted += resolver.bulkInsert(uri, mContentValuesCache);
+        }
+        final String message = context.getResources().getQuantityString(
+                R.plurals.NNNtrackstoplaylist, numinserted, numinserted);
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+    }
+
+    public static void makeInsertItems(final long[] ids, final int offset, int len, final int base) {
+        if (offset + len > ids.length) {
+            len = ids.length - offset;
+        }
+
+        if (mContentValuesCache == null || mContentValuesCache.length != len) {
+            mContentValuesCache = new ContentValues[len];
+        }
+        for (int i = 0; i < len; i++) {
+            if (mContentValuesCache[i] == null) {
+                mContentValuesCache[i] = new ContentValues();
+            }
+            mContentValuesCache[i].put(MediaStore.Audio.Playlists.Members.PLAY_ORDER, base + offset + i);
+            mContentValuesCache[i].put(MediaStore.Audio.Playlists.Members.AUDIO_ID, ids[offset + i]);
+        }
+    }
+
+    public static final long createPlaylist(final Context context, final String name) {
+        if (name != null && name.length() > 0) {
+            final ContentResolver resolver = context.getContentResolver();
+            final String[] projection = new String[]{
+                    MediaStore.Audio.PlaylistsColumns.NAME
+            };
+            final String selection = MediaStore.Audio.PlaylistsColumns.NAME + " = '" + name + "'";
+            Cursor cursor = resolver.query(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI,
+                    projection, selection, null, null);
+            if (cursor.getCount() <= 0) {
+                final ContentValues values = new ContentValues(1);
+                values.put(MediaStore.Audio.PlaylistsColumns.NAME, name);
+                final Uri uri = resolver.insert(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI,
+                        values);
+                return Long.parseLong(uri.getLastPathSegment());
+            }
+            if (cursor != null) {
+                cursor.close();
+                cursor = null;
+            }
+            return -1;
+        }
+        return -1;
+    }
+
+    public static final void openFile(final String path) {
+        if (mService != null) {
+            try {
+                mService.openFile(path);
+            } catch (final RemoteException ignored) {
+            }
+        }
+    }
+    public static boolean volumeKeyAction(boolean up){
+        if (mService != null) {
+            try {
+                return mService.volumeKeyAction(up);
+            } catch (final RemoteException ignored) {
+            }
+        }
+        return false;
+    }
+    public static final class ServiceBinder implements ServiceConnection {
+        private final ServiceConnection mCallback;
+        private final Context mContext;
+
+
+        public ServiceBinder(final ServiceConnection callback, final Context context) {
+            mCallback = callback;
+            mContext = context;
+        }
+
+        @Override
+        public void onServiceConnected(final ComponentName className, final IBinder service) {
+            mService = IMusicService.Stub.asInterface(service);
+            if (mCallback != null) {
+                mCallback.onServiceConnected(className, service);
+            }
+            initPlaybackServiceWithSettings(mContext);
+			MusicPlayer.setShakeToPlayEnabled(sShakeToPlayEnabled);
+        }
+
+        @Override
+        public void onServiceDisconnected(final ComponentName className) {
+            if (mCallback != null) {
+                mCallback.onServiceDisconnected(className);
+            }
+            mService = null;
+        }
+    }
+
+    public static final class ServiceToken {
+        public ContextWrapper mWrappedContext;
+
+        public ServiceToken(final ContextWrapper context) {
+            mWrappedContext = context;
+        }
+    }
+    public static void setShakeToPlayEnabled(boolean enabled) {
                 try {
                         if (mService != null) {
                                 mService.setShakeToPlayEnabled(enabled);
                            }
                    } catch (final RemoteException ignored) {
-                    }
             }
+     }
 
-    public static final String makeLabel(final Context context, final int pluralInt,
-                                         final int number) {
-        return context.getResources().getQuantityString(pluralInt, number, number);
+    /**
+     * Sleep mode status get/set
+     */
+    public static boolean getSleepMode() {
+        if (mService != null) {
+            try {
+                return mService.getSleepMode();
+            } catch (final RemoteException ignored) {
+            }
+        }
+        return false;
     }
+    
+    public static void setSleepMode(boolean enable) {
+        if (mService != null) {
+            try {
+                mService.setSleepMode(enable);
+            } catch (final RemoteException ignored) {
+            }
+        }
+	}
+
 }

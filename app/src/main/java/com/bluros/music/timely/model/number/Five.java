@@ -1,6 +1,6 @@
 package com.bluros.music.timely.model.number;
 
-import com.bluros.music.timely.model.core.Figure;;
+import com.bluros.music.timely.model.core.Figure;
 
 public class Five extends Figure {
     private static final float[][] POINTS = {

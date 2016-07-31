@@ -20,6 +20,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.media.audiofx.AudioEffect;
 import android.net.Uri;
 import android.os.Build;
@@ -29,6 +32,11 @@ import android.util.TypedValue;
 
 import com.bluros.music.MusicPlayer;
 import com.bluros.music.R;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 public class MusicUtils {
 
@@ -113,7 +121,26 @@ public class MusicUtils {
         return 0;
     }
 
-    public static enum IdType {
+    public static boolean hasEffectsPanel(final Activity activity) {
+        final PackageManager packageManager = activity.getPackageManager();
+        return packageManager.resolveActivity(createEffectsIntent(),
+                PackageManager.MATCH_DEFAULT_ONLY) != null;
+    }
+
+    public static Intent createEffectsIntent() {
+        final Intent effects = new Intent(AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL);
+        effects.putExtra(AudioEffect.EXTRA_AUDIO_SESSION, MusicPlayer.getAudioSessionId());
+        return effects;
+    }
+
+    public static int getBlackWhiteColor(int color) {
+        double darkness = 1 - (0.299 * Color.red(color) + 0.587 * Color.green(color) + 0.114 * Color.blue(color)) / 255;
+        if (darkness >= 0.5) {
+            return Color.WHITE;
+        } else return Color.BLACK;
+    }
+
+    public enum IdType {
         NA(0),
         Artist(1),
         Album(2),
@@ -136,7 +163,7 @@ public class MusicUtils {
         }
     }
 
-    public static enum PlaylistType {
+    public enum PlaylistType {
         LastAdded(-1, R.string.playlist_last_added),
         RecentlyPlayed(-2, R.string.playlist_recently_played),
         TopTracks(-3, R.string.playlist_top_tracks);
@@ -159,18 +186,21 @@ public class MusicUtils {
             return null;
         }
     }
-
-    public static boolean hasEffectsPanel(final Activity activity) {
-        final PackageManager packageManager = activity.getPackageManager();
-        return packageManager.resolveActivity(createEffectsIntent(),
-                PackageManager.MATCH_DEFAULT_ONLY) != null;
+    public static Bitmap loadBitmapByURL(String surl){
+        InputStream instr = null;
+        try {
+            URL url = new URL(surl);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            instr = connection.getInputStream();
+            return BitmapFactory.decodeStream(instr);
+        } catch (IOException e) {
+            return null;
+        } finally {
+            if (instr != null) try {
+                instr.close();
+            } catch (IOException e) {
+            }
+        }
     }
-
-    public static Intent createEffectsIntent() {
-        final Intent effects = new Intent(AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL);
-        effects.putExtra(AudioEffect.EXTRA_AUDIO_SESSION, MusicPlayer.getAudioSessionId());
-        return effects;
-    }
-
 
 }

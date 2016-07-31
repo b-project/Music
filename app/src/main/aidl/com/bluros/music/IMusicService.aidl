@@ -48,7 +48,10 @@ interface IMusicService
     int getRepeatMode();
     int getMediaMountedCount();
     int getAudioSessionId();
+    boolean getSleepMode();
+    void setSleepMode(boolean enable);
     void setLockscreenAlbumArt(boolean enabled);
+    boolean volumeKeyAction(boolean up);
     void setShakeToPlayEnabled(boolean enabled);
 }
 

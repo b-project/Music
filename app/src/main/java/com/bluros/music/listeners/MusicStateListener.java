@@ -24,16 +24,16 @@ public interface MusicStateListener {
     /**
      * Called when {@link com.bluros.music.MusicService#REFRESH} is invoked
      */
-    public void restartLoader();
+    void restartLoader();
 
     /**
      * Called when {@link com.bluros.music.MusicService#PLAYLIST_CHANGED} is invoked
      */
-    public void onPlaylistChanged();
+    void onPlaylistChanged();
 
     /**
      * Called when {@link com.bluros.music.MusicService#META_CHANGED} is invoked
      */
-    public void onMetaChanged();
+    void onMetaChanged();
 
 }

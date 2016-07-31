@@ -87,5 +87,14 @@
     <string name="bluros_pow">Powered By BlurOS</string>
     <string name="settings_shake_to_play">Lắc để chơi nhạc</string>
     <string name="settings_shake_to_play_summary">Lắc một cái để chuyển bài hoặc lắc liên tục để tua bài hát</string>
+    <string name="menu_sleep_mode">Hẹn gio tắt nhạc</string>
+    <string name="cancel_sleep_mode">Hủy bỏ</string>
+    <string name="select_quit_time">Đặt thời gian tắt nhạc (phút)</string>
+    <string name="quit_warining">Nhạc sẽ tắt trong %1$s phút(s)</string>
+    <string name="action_remote_search">Remote search</string>
+    <string name="colored_status_bar">Đồng bộ màu thanh trạng thái</string>
+    <string name="colored_nav_bar">Đồng bộ màu thanh điều hướng</string>
+    <string name="dark_theme">Chủ đề màu Đen</string>
+    <string name="dark_theme_summary">Chọn chủ đề trình nghe nhạc sẽ có tông nền đen</string>
     
 </resources>

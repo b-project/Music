@@ -17,7 +17,6 @@ package com.bluros.music.activities;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -37,14 +36,13 @@ import com.bluros.music.models.Album;
 import com.bluros.music.models.Artist;
 import com.bluros.music.models.Song;
 import com.bluros.music.provider.SearchHistory;
-import com.bluros.music.utils.PreferencesUtility;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-public class SearchActivity extends AppCompatActivity implements SearchView.OnQueryTextListener, View.OnTouchListener {
+public class SearchActivity extends BaseThemedActivity implements SearchView.OnQueryTextListener, View.OnTouchListener {
 
     private SearchView mSearchView;
     private InputMethodManager mImm;
@@ -54,15 +52,10 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
     private RecyclerView recyclerView;
 
     private List searchResults = Collections.emptyList();
-    ;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
-        if (PreferencesUtility.getInstance(this).getTheme().equals("dark"))
-            setTheme(R.style.AppThemeNormalDark);
-        else if (PreferencesUtility.getInstance(this).getTheme().equals("black"))
-            setTheme(R.style.AppThemeNormalBlack);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
@@ -106,7 +99,6 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
         });
 
         menu.findItem(R.id.menu_search).expandActionView();
-
         return super.onCreateOptionsMenu(menu);
     }
 

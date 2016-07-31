@@ -18,8 +18,8 @@ import com.bluros.music.lastfmapi.models.LastfmAlbum;
 
 public interface AlbuminfoListener {
 
-    public void albumInfoSucess(LastfmAlbum album);
+    void albumInfoSucess(LastfmAlbum album);
 
-    public void albumInfoFailed();
+    void albumInfoFailed();
 
 }

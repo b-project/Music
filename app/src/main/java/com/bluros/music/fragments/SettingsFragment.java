@@ -14,15 +14,22 @@
 
 package com.bluros.music.fragments;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.SwitchPreference;
+import android.view.View;
 
+import com.afollestad.appthemeengine.ATE;
+import com.afollestad.appthemeengine.Config;
+import com.afollestad.appthemeengine.prefs.ATECheckBoxPreference;
+import com.afollestad.appthemeengine.prefs.ATEColorPreference;
+import com.afollestad.materialdialogs.color.ColorChooserDialog;
 import com.bluros.music.R;
+import com.bluros.music.activities.SettingsActivity;
 import com.bluros.music.utils.Constants;
 import com.bluros.music.utils.NavigationUtils;
 import com.bluros.music.utils.PreferencesUtility;
@@ -36,12 +43,11 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
     private static final String TOGGLE_ANIMATIONS = "toggle_animations";
     private static final String TOGGLE_SYSTEM_ANIMATIONS = "toggle_system_animations";
     private static final String KEY_START_PAGE = "start_page_preference";
-
     Preference nowPlayingSelector;
     SwitchPreference toggleAnimations;
     ListPreference themePreference, startPagePreference;
-
     PreferencesUtility mPreferences;
+    private String mAteKey;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -52,14 +58,13 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         mPreferences = PreferencesUtility.getInstance(getActivity());
 
         nowPlayingSelector = findPreference(NOW_PLAYING_SELECTOR);
-        themePreference = (ListPreference) findPreference(KEY_THEME);
+//        themePreference = (ListPreference) findPreference(KEY_THEME);
         startPagePreference = (ListPreference) findPreference(KEY_START_PAGE);
-        toggleAnimations = (SwitchPreference) findPreference(TOGGLE_ANIMATIONS);
 
         nowPlayingSelector.setIntent(NavigationUtils.getNavigateToStyleSelectorIntent(getActivity(), Constants.SETTINGS_STYLE_SELECTOR_NOWPLAYING));
 
         PreferencesUtility.getInstance(getActivity()).setOnSharedPreferenceChangeListener(this);
-        setPrefernceCickListeners();
+        setPreferenceClickListeners();
 
     }
 
@@ -68,17 +73,17 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
                                           String key) {
     }
 
-    private void setPrefernceCickListeners() {
+    private void setPreferenceClickListeners() {
 
-        themePreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                Intent i = getActivity().getBaseContext().getPackageManager().getLaunchIntentForPackage(getActivity().getBaseContext().getPackageName());
-                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(i);
-                return true;
-            }
-        });
+//        themePreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+//            @Override
+//            public boolean onPreferenceChange(Preference preference, Object newValue) {
+//                Intent i = getActivity().getBaseContext().getPackageManager().getLaunchIntentForPackage(getActivity().getBaseContext().getPackageName());
+//                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                startActivity(i);
+//                return true;
+//            }
+//        });
 
         startPagePreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
@@ -103,6 +108,57 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
                 return true;
             }
         });
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        invalidateSettings();
+        ATE.apply(view, mAteKey);
+    }
+
+    public void invalidateSettings() {
+        mAteKey = ((SettingsActivity) getActivity()).getATEKey();
+
+        findPreference("dark_theme").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                // Marks both theme configs as changed so MainActivity restarts itself on return
+                Config.markChanged(getActivity(), "light_theme");
+                Config.markChanged(getActivity(), "dark_theme");
+                // The dark_theme preference value gets saved by Android in the default PreferenceManager.
+                // It's used in getATEKey() of both the Activities.
+                getActivity().recreate();
+                return true;
+            }
+        });
+
+        final ATECheckBoxPreference statusBarPref = (ATECheckBoxPreference) findPreference("colored_status_bar");
+        final ATECheckBoxPreference navBarPref = (ATECheckBoxPreference) findPreference("colored_nav_bar");
+
+        statusBarPref.setChecked(Config.coloredStatusBar(getActivity(), mAteKey));
+        statusBarPref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                ATE.config(getActivity(), mAteKey)
+                        .coloredStatusBar((Boolean) newValue)
+                        .apply(getActivity());
+                return true;
+            }
+        });
+
+
+        navBarPref.setChecked(Config.coloredNavigationBar(getActivity(), mAteKey));
+        navBarPref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                ATE.config(getActivity(), mAteKey)
+                        .coloredNavigationBar((Boolean) newValue)
+                        .apply(getActivity());
+                return true;
+            }
+        });
+
     }
 
 

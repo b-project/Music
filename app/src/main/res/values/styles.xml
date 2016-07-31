@@ -9,8 +9,6 @@
     <attr format="reference" name="progressDrawableWithBackground" />
     <attr format="reference" name="stateSelector" />
 
-    <!-- BlurOS Intro -->
-
 
     <style name="ThemeBaseLight" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
@@ -25,13 +23,9 @@
         <item name="progressBackgroundColor">@color/progressBackgroundColorLight</item>
         <item name="progressDrawable">@drawable/progress_drawable</item>
         <item name="progressDrawableWithBackground">@drawable/progress_drawable_withbackground</item>
+        <item name="ate_key">light_theme</item>
 
     </style>
-    
-    <style name="TranslateThemeFull" parent="@android:style/Theme.NoTitleBar.Fullscreen">
-        <item name="android:windowBackground">@android:color/transparent</item>
-    </style>
-    
     <style name="ThemeBaseDark" parent="Theme.AppCompat.NoActionBar">
         <item name="colorPrimary">@color/colorPrimaryDarkTheme</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDarkDarkTheme</item>
@@ -45,6 +39,7 @@
         <item name="progressBackgroundColor">@color/progressBackgroundColorDark</item>
         <item name="progressDrawable">@drawable/progress_drawable_dark</item>
         <item name="progressDrawableWithBackground">@drawable/progress_drawable_withbackground_dark</item>
+        <item name="ate_key">dark_theme</item>
 
     </style>
     <style name="ThemeBaseBlack" parent="Theme.AppCompat.NoActionBar">

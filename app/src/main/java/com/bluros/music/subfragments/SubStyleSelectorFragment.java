@@ -28,18 +28,17 @@ import android.widget.TextView;
 
 import com.bluros.music.R;
 import com.bluros.music.utils.Constants;
+import com.bluros.music.utils.PreferencesUtility;
 
 public class SubStyleSelectorFragment extends Fragment {
 
+    private static final String ARG_PAGE_NUMBER = "pageNumber";
+    private static final String WHAT = "what";
     SharedPreferences.Editor editor;
     SharedPreferences preferences;
-
     LinearLayout currentStyle;
     View foreground;
     ImageView styleImage;
-
-    private static final String ARG_PAGE_NUMBER = "pageNumber";
-    private static final String WHAT = "what";
 
     public static SubStyleSelectorFragment newInstance(int pageNumber, String what) {
         SubStyleSelectorFragment fragment = new SubStyleSelectorFragment();
@@ -91,7 +90,7 @@ public class SubStyleSelectorFragment extends Fragment {
 
     public void setCurrentStyle() {
         preferences = getActivity().getSharedPreferences(Constants.FRAGMENT_ID, Context.MODE_PRIVATE);
-        String fragmentID = preferences.getString(Constants.NOWPLAYING_FRAGMENT_ID, Constants.TIMBER2);
+        String fragmentID = preferences.getString(Constants.NOWPLAYING_FRAGMENT_ID, Constants.TIMBER3);
 
         ((StyleSelectorFragment) getParentFragment()).scrollToCurrentStyle(getIntForCurrentNowplaying(fragmentID));
 
@@ -110,7 +109,9 @@ public class SubStyleSelectorFragment extends Fragment {
         if (getArguments().getString(WHAT).equals(Constants.SETTINGS_STYLE_SELECTOR_NOWPLAYING)) {
             editor = getActivity().getSharedPreferences(Constants.FRAGMENT_ID, Context.MODE_PRIVATE).edit();
             editor.putString(Constants.NOWPLAYING_FRAGMENT_ID, getStyleForPageNumber());
-            editor.commit();
+            editor.apply();
+            if (getActivity() != null)
+                PreferencesUtility.getInstance(getActivity()).setNowPlayingThemeChanged(true);
             setCurrentStyle();
             ((StyleSelectorFragment) getParentFragment()).updateCurrentStyle();
         }

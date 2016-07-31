@@ -25,7 +25,7 @@
 package com.bluros.music.permissions;
 
 public interface PermissionCallback {
-    public void permissionGranted();
+    void permissionGranted();
 
-    public void permissionRefused();
+    void permissionRefused();
 }
